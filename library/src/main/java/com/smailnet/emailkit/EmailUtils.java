@@ -47,6 +47,12 @@ class EmailUtils {
             }
             Session session;
             if (config.getMailType().equals(EmailKit.MailType.OUTLOOK)) {
+                //设置邮件传输服务器，由于本次是发送邮件操作，所需我们需要配置smtp协议，按outlook官方同步邮件的要求，依次配置协议地址，端口号和加密方法
+//                properties.setProperty("mail.smtp.host", "smtp.office365.com");
+//                properties.setProperty("mail.smtp.port", "587");
+                properties.setProperty("mail.smtp.starttls.enable", "true");
+                //用户验证并返回Session，开启用户验证，设置发送邮箱的账号密码。
+//                properties.setProperty("mail.smtp.auth", "true");
                 session = Session.getInstance(properties, new Authenticator() {
                     @Override
                     protected PasswordAuthentication getPasswordAuthentication() {

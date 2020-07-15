@@ -64,8 +64,8 @@ class Converter {
                             .setIMAP("imap.exmail.qq.com", 993, true);
                 case EmailKit.MailType.OUTLOOK:
                     return new EmailKit.Config()
-                            .setSMTP("smtp-mail.outlook.com", 25, false)
-                            .setIMAP("imap-mail.outlook.com", 993, true);
+                            .setSMTP("smtp.office365.com", 587, false)
+                            .setIMAP("outlook.office365.com", 993, true);
                 case EmailKit.MailType.YEAH:
                     return new EmailKit.Config()
                             .setSMTP("smtp.yeah.net", 465, true)
