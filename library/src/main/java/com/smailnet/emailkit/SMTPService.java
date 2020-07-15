@@ -13,10 +13,11 @@ public final class SMTPService {
 
     /**
      * 发送邮件
-     * @param draft Draft对象
-     * @param getSendCallback   发送结果回调
+     *
+     * @param draft           Draft对象
+     * @param getSendCallback 发送结果回调
      */
-    public void send(Draft draft, EmailKit.GetSendCallback getSendCallback) {
+    public void send(Draft draft, EmailKit.GetSendCallback getSendCallback, EmailKit.SendMessageListener sendMessageListener) {
         ObjectManager.getMultiThreadService()
                 .execute(() -> EmailCore.send(config, draft, new EmailKit.GetSendCallback() {
                     @Override
@@ -28,7 +29,7 @@ public final class SMTPService {
                     public void onFailure(String errMsg) {
                         ObjectManager.getHandler().post(() -> getSendCallback.onFailure(errMsg));
                     }
-                }));
+                }, sendMessageListener));
     }
 
 }

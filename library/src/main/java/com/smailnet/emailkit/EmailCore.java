@@ -27,13 +27,14 @@ class EmailCore {
 
     /**
      * 发送邮件
+     *
      * @param config
      * @param draft
      * @param getSendCallback
      */
-    static void send(EmailKit.Config config, Draft draft, EmailKit.GetSendCallback getSendCallback) {
+    static void send(EmailKit.Config config, Draft draft, EmailKit.GetSendCallback getSendCallback, EmailKit.SendMessageListener sendMessageListener) {
         try {
-            MimeMessage message = Converter.MessageUtils.toInternetMessage(config, draft);
+            MimeMessage message = Converter.MessageUtils.toInternetMessage(config, draft, sendMessageListener);
             Transport transport = EmailUtils.getTransport(config);
             assert message != null;
             transport.sendMessage(message, message.getRecipients(javax.mail.Message.RecipientType.TO));
@@ -52,13 +53,14 @@ class EmailCore {
 
     /**
      * 使用IMAP协议接收服务器上的邮件
+     *
      * @param config
      * @param folderName
      * @param getReceiveCallback
      */
-     static void receive(EmailKit.Config config, String folderName, EmailKit.GetReceiveCallback getReceiveCallback) {
+    static void receive(EmailKit.Config config, String folderName, EmailKit.GetReceiveCallback getReceiveCallback) {
         try {
-            IMAPStore store =  EmailUtils.getStore(config);
+            IMAPStore store = EmailUtils.getStore(config);
             IMAPFolder folder = EmailUtils.getFolder(folderName, store, config);
             javax.mail.Message[] messages = folder.getMessages();
             FetchProfile fetchProfile = new FetchProfile();
@@ -67,7 +69,7 @@ class EmailCore {
             folder.fetch(messages, fetchProfile);
             List<Message> messageList = new ArrayList<>();
             int total = messages.length, index = 0;
-            for (javax.mail.Message msg: messages){
+            for (javax.mail.Message msg : messages) {
                 Message message = Converter.MessageUtils.toLocalMessage(folder.getUID(msg), msg);
                 messageList.add(message);
                 getReceiveCallback.receiving(message, ++index, total);
@@ -81,12 +83,13 @@ class EmailCore {
 
     /**
      * 加载邮件
+     *
      * @param lastUID
      * @param getLoadCallback
      */
     static void load(EmailKit.Config config, String folderName, long lastUID, EmailKit.GetLoadCallback getLoadCallback) {
         try {
-            IMAPStore store =  EmailUtils.getStore(config);
+            IMAPStore store = EmailUtils.getStore(config);
             IMAPFolder folder = EmailUtils.getFolder(folderName, store, config);
             long[] uids = UIDHandler.nextUIDArray(folder, lastUID);
             javax.mail.Message[] messages = folder.getMessagesByUID(uids);
@@ -95,7 +98,7 @@ class EmailCore {
             fetchProfile.add(FetchProfile.Item.FLAGS);
             folder.fetch(messages, fetchProfile);
             List<Message> msgList = new ArrayList<>();
-            for (javax.mail.Message msg: messages){
+            for (javax.mail.Message msg : messages) {
                 Message message = Converter.MessageUtils.toLocalMessage(folder.getUID(msg), msg);
                 msgList.add(message);
             }
@@ -108,6 +111,7 @@ class EmailCore {
 
     /**
      * 同步uid
+     *
      * @param config
      * @param folderName
      * @param localUIDArray
@@ -141,6 +145,7 @@ class EmailCore {
 
     /**
      * 获取数量统计
+     *
      * @param config
      * @param folderName
      * @param getCountCallback
@@ -160,6 +165,7 @@ class EmailCore {
 
     /**
      * 获取全部UID
+     *
      * @param config
      * @param folderName
      * @param getUIDListCallback
@@ -183,6 +189,7 @@ class EmailCore {
 
     /**
      * 获取某一封邮件消息
+     *
      * @param config
      * @param folderName
      * @param uid
@@ -207,6 +214,7 @@ class EmailCore {
 
     /**
      * 获取多封邮件消息
+     *
      * @param config
      * @param folderName
      * @param uidList
@@ -225,7 +233,7 @@ class EmailCore {
                 }
             }
             getMsgListCallback.onSuccess(messageList);
-        }catch (MessagingException e) {
+        } catch (MessagingException e) {
             e.printStackTrace();
             getMsgListCallback.onFailure(e.getMessage());
         }
@@ -233,6 +241,7 @@ class EmailCore {
 
     /**
      * 获取默认的文件夹列表
+     *
      * @param config
      * @param getFolderListCallback
      */
@@ -254,6 +263,7 @@ class EmailCore {
 
     /**
      * 获取默认的文件夹列表（无回调）
+     *
      * @param config
      * @return
      */
@@ -275,6 +285,7 @@ class EmailCore {
 
     /**
      * 移动消息
+     *
      * @param config
      * @param originalFolderName
      * @param targetFolderName
@@ -306,6 +317,7 @@ class EmailCore {
 
     /**
      * 批量移动消息
+     *
      * @param config
      * @param originalFolderName
      * @param targetFolderName
@@ -331,6 +343,7 @@ class EmailCore {
 
     /**
      * 星标消息
+     *
      * @param config
      * @param folderName
      * @param uid
@@ -358,6 +371,7 @@ class EmailCore {
 
     /**
      * 批量星标消息
+     *
      * @param config
      * @param folderName
      * @param uidList
@@ -380,6 +394,7 @@ class EmailCore {
 
     /**
      * 标记消息已读或未读
+     *
      * @param config
      * @param folderName
      * @param uid
@@ -407,6 +422,7 @@ class EmailCore {
 
     /**
      * 批量标记消息已读或未读
+     *
      * @param config
      * @param folderName
      * @param uidList
@@ -429,6 +445,7 @@ class EmailCore {
 
     /**
      * 删除消息
+     *
      * @param config
      * @param folderName
      * @param uid
@@ -455,6 +472,7 @@ class EmailCore {
 
     /**
      * 批量删除邮件
+     *
      * @param config
      * @param folderName
      * @param uidList
@@ -476,14 +494,15 @@ class EmailCore {
 
     /**
      * 保存消息到草稿箱文件夹
+     *
      * @param config
      * @param draft
      * @param getOperateCallback
      */
     static void saveToDraft(EmailKit.Config config, Draft draft, EmailKit.GetOperateCallback getOperateCallback) {
         try {
-            MimeMessage message = Converter.MessageUtils.toInternetMessage(config, draft);
-            IMAPStore store =  EmailUtils.getStore(config);
+            MimeMessage message = Converter.MessageUtils.toInternetMessage(config, draft, null);
+            IMAPStore store = EmailUtils.getStore(config);
             IMAPFolder folder = EmailUtils.getFolder("Drafts", store, config);
             folder.appendMessages(new MimeMessage[]{message});
             folder.close(true);
@@ -496,6 +515,7 @@ class EmailCore {
 
     /**
      * 邮箱帐号及配置的检查
+     *
      * @param config
      * @param getAuthCallback
      */
@@ -519,6 +539,7 @@ class EmailCore {
 
     /**
      * 监听收件箱的新消息，如果邮件服务器支持idle，即可正常使用这个方法
+     *
      * @param config
      * @param onMsgListener
      */
@@ -555,6 +576,7 @@ class EmailCore {
 
     /**
      * 通过邮件主题搜索
+     *
      * @param config
      * @param subject
      * @param getSearchCallback
@@ -579,6 +601,7 @@ class EmailCore {
 
     /**
      * 通过发件人昵称搜索
+     *
      * @param config
      * @param nickname
      * @param getSearchCallback
@@ -603,6 +626,7 @@ class EmailCore {
 
     /**
      * 通过收件人昵称搜索
+     *
      * @param config
      * @param nickname
      * @param getSearchCallback

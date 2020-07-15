@@ -46,7 +46,7 @@ class EmailUtils {
                 properties.setProperty("mail.imaps.partialfetch", "false");
             }
             Session session;
-            if (config.getMailType().equals(EmailKit.MailType.OUTLOOK)) {
+            if (config.getMailType() != null && config.getMailType().equals(EmailKit.MailType.OUTLOOK)) {
                 //设置邮件传输服务器，由于本次是发送邮件操作，所需我们需要配置smtp协议，按outlook官方同步邮件的要求，依次配置协议地址，端口号和加密方法
 //                properties.setProperty("mail.smtp.host", "smtp.office365.com");
 //                properties.setProperty("mail.smtp.port", "587");

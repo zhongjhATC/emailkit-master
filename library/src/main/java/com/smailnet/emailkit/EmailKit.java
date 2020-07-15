@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.List;
 
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 
 /**
  * EmailKit for Android是以JavaMail类库为基础进行封装的框架，它比JavaMail
@@ -114,6 +115,16 @@ public final class EmailKit {
                         ObjectManager.getHandler().post(() -> getAuthCallback.onFailure(errMsg));
                     }
                 }));
+    }
+
+    /**
+     * 文本发送回调
+     */
+    public interface SendMessageListener {
+        /**
+         * @return 自定义文本内容
+         */
+        Multipart onSendMessageListener();
     }
 
     /**

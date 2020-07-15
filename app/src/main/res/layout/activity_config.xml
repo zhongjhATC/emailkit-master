@@ -50,7 +50,7 @@
                     android:layout_marginEnd="20dp"
                     android:hint="example@domain.com"
                     android:inputType="textEmailAddress"
-                    android:text="a254191389@hotmail.com"
+                    android:text="254191389@qq.com"
                     android:singleLine="true"
                     android:textSize="16sp"
                     tools:ignore="Autofill,HardcodedText" />
@@ -81,7 +81,7 @@
                     android:inputType="textWebPassword"
                     android:singleLine="true"
                     android:textSize="16sp"
-                    android:text="qq20249019qq"
+                    android:text="xrxobseugcyocafb"
                     tools:ignore="Autofill,HardcodedText" />
 
             </LinearLayout>
@@ -145,7 +145,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="20dp"
                     android:singleLine="true"
-                    android:text="smtp.office365.com"
+                    android:text="smtp.qq.com"
                     android:hint="请填写主机地址"
                     android:textSize="16sp"
                     tools:ignore="Autofill,HardcodedText,TextFields" />
@@ -173,7 +173,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="20dp"
                     android:hint="请填写端口号"
-                    android:text="587"
+                    android:text="465"
                     android:inputType="number"
                     android:singleLine="true"
                     android:textSize="16sp"
@@ -233,7 +233,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:text="outlook.office365.com"
+                    android:text="imap.qq.com"
                     android:layout_marginEnd="20dp"
                     android:singleLine="true"
                     android:hint="请填写主机地址"

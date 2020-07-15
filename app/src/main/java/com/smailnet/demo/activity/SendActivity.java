@@ -75,7 +75,7 @@ public class SendActivity extends BaseActivity {
                                 Controls.toast(errMsg);
                                 progressDialog.dismiss();
                             }
-                        }));
+                        }, null));
 
     }
 

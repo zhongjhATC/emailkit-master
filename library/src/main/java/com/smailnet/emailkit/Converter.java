@@ -48,6 +48,7 @@ class Converter {
 
         /**
          * 获取该邮箱对应的服务器配置参数
+         *
          * @param type
          * @return
          */
@@ -85,13 +86,14 @@ class Converter {
 
         /**
          * 判断是否为网易系的邮箱
+         *
          * @param account
          * @return
          */
         static boolean isNetEaseMail(String account) {
             return account.contains(EmailKit.MailType.$163) ||
-                   account.contains(EmailKit.MailType.$126) ||
-                   account.contains(EmailKit.MailType.YEAH);
+                    account.contains(EmailKit.MailType.$126) ||
+                    account.contains(EmailKit.MailType.YEAH);
         }
 
     }
@@ -103,6 +105,7 @@ class Converter {
 
         /**
          * 字符串类型地址转为数组类型
+         *
          * @param addresses
          * @return
          */
@@ -120,6 +123,7 @@ class Converter {
 
         /**
          * 获取发件人信息
+         *
          * @param addresses
          * @return
          */
@@ -136,6 +140,7 @@ class Converter {
 
         /**
          * 获取收件人信息
+         *
          * @param addresses
          * @return
          */
@@ -153,6 +158,7 @@ class Converter {
 
         /**
          * 获取抄送人信息
+         *
          * @param addresses
          * @return
          */
@@ -235,6 +241,7 @@ class Converter {
 
         /**
          * 获取text或html文本内容
+         *
          * @param part
          * @param map
          * @return
@@ -244,7 +251,7 @@ class Converter {
         static HashMap<String, StringBuilder> getTexts(Part part, HashMap<String, StringBuilder> map) throws MessagingException, IOException {
             StringBuilder text = new StringBuilder();
             StringBuilder html = new StringBuilder();
-            if (part.isMimeType(TEXT_PLAIN)){
+            if (part.isMimeType(TEXT_PLAIN)) {
                 map.put(TEXT_PLAIN, text.append(part.getContent()));
             } else if (part.isMimeType(TEXT_HTML)) {
                 map.put(TEXT_HTML, html.append(part.getContent()));
@@ -259,6 +266,7 @@ class Converter {
 
         /**
          * 获取邮件正文
+         *
          * @param message
          * @return
          * @throws IOException
@@ -284,6 +292,7 @@ class Converter {
 
         /**
          * 获取消息中包含附件的部分
+         *
          * @param part
          * @return
          */
@@ -303,6 +312,7 @@ class Converter {
 
         /**
          * 获取全部附件
+         *
          * @return
          */
         static List<Message.Content.Attachment> getAttachmentList(Part part) throws IOException, MessagingException {
@@ -357,6 +367,7 @@ class Converter {
 
         /**
          * 获取邮件是否已读和是否被星标的状态
+         *
          * @param internetFlags
          * @return
          */
@@ -375,6 +386,7 @@ class Converter {
 
         /**
          * 网络消息转本地消息
+         *
          * @param uid
          * @param message
          * @return
@@ -430,61 +442,68 @@ class Converter {
 
         /**
          * 草稿消息转网络消息
+         *
          * @param config
          * @param draft
          * @return
          */
-        static MimeMessage toInternetMessage(EmailKit.Config config, Draft draft) {
+        static MimeMessage toInternetMessage(EmailKit.Config config, Draft draft, EmailKit.SendMessageListener sendMessageListener) {
             try {
                 Session session = EmailUtils.getSession(config);
-                //创建消息对象
+                // 创建消息对象
                 MimeMessage message = new MimeMessage(session);
-                //收件人
+                // 收件人
                 message.addRecipients(RecipientType.TO, draft.getTo());
-                //判断是否存在抄送人
+                // 判断是否存在抄送人
                 if (draft.getCc() != null) {
                     message.addRecipients(RecipientType.CC, draft.getCc());
                 }
-                //判断是否存在密送人
+                // 判断是否存在密送人
                 if (draft.getBcc() != null) {
                     message.addRecipients(RecipientType.BCC, draft.getBcc());
                 }
-                //发件人昵称+邮箱地址
+                // 发件人昵称+邮箱地址
                 message.setFrom(new InternetAddress(draft.getNickname() + "<" + config.getAccount() + ">"));
-                //邮件主题
+                // 邮件主题
                 message.setSubject(draft.getSubject(), "UTF-8");
-                //邮件发送日期
+                // 邮件发送日期
                 message.setSentDate(new Date());
-                //邮件内容
-                if (draft.getText() != null && draft.getHTML() == null && draft.getAttachment() == null) {
-                    message.setText(draft.getText(), "UTF-8");
-                } else if (draft.getHTML() != null && draft.getAttachment() == null) {
-                    message.setContent(draft.getHTML(), "text/html; charset=UTF-8");
-                } else if (draft.getAttachment() != null) {
-                    //创建多重消息对象
-                    Multipart multipart = new MimeMultipart();
-                    //文本内容
-                    if (draft.getText() != null) {
-                        MimeBodyPart textBodyPart = new MimeBodyPart();
-                        textBodyPart.setText(draft.getText(), "UTF-8");
-                        multipart.addBodyPart(textBodyPart);
+                // 邮件内容
+                if (sendMessageListener != null) {
+                    // 自己自定义邮件内容
+                    message.setContent(sendMessageListener.onSendMessageListener());
+                } else {
+                    if (draft.getText() != null && draft.getHTML() == null && draft.getAttachment() == null) {
+                        message.setText(draft.getText(), "UTF-8");
+                    } else if (draft.getHTML() != null && draft.getAttachment() == null) {
+                        message.setContent(draft.getHTML(), "text/html; charset=UTF-8");
+                    } else if (draft.getAttachment() != null) {
+                        // 创建多重消息对象
+                        Multipart multipart = new MimeMultipart();
+                        // 文本内容
+                        if (draft.getText() != null) {
+                            MimeBodyPart textBodyPart = new MimeBodyPart();
+                            textBodyPart.setText(draft.getText(), "UTF-8");
+                            multipart.addBodyPart(textBodyPart);
+                        }
+                        // HTML内容
+                        if (draft.getHTML() != null) {
+                            MimeBodyPart htmlBodyPart = new MimeBodyPart();
+                            htmlBodyPart.setContent(draft.getHTML(), "text/html; charset=UTF-8");
+                            multipart.addBodyPart(htmlBodyPart);
+                        }
+                        // 设置图片
+                        // 设置附件
+                        MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+                        File file = draft.getAttachment();
+                        URL url = file.toURI().toURL();
+                        DataSource source = new URLDataSource(url);
+                        attachmentBodyPart.setFileName(TextUtils.encodeText(file.getName()));
+                        attachmentBodyPart.setDataHandler(new DataHandler(source));
+                        multipart.addBodyPart(attachmentBodyPart);
+                        // 设置消息对象
+                        message.setContent(multipart);
                     }
-                    //HTML内容
-                    if (draft.getHTML() != null) {
-                        MimeBodyPart htmlBodyPart = new MimeBodyPart();
-                        htmlBodyPart.setContent(draft.getHTML(), "text/html; charset=UTF-8");
-                        multipart.addBodyPart(htmlBodyPart);
-                    }
-                    //设置附件
-                    MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-                    File file = draft.getAttachment();
-                    URL url = file.toURI().toURL();
-                    DataSource source = new URLDataSource(url);
-                    attachmentBodyPart.setFileName(TextUtils.encodeText(file.getName()));
-                    attachmentBodyPart.setDataHandler(new DataHandler(source));
-                    multipart.addBodyPart(attachmentBodyPart);
-                    //设置消息对象
-                    message.setContent(multipart);
                 }
                 //保存到已发送文件夹
                 message.setFlag(Flags.Flag.RECENT, true);
