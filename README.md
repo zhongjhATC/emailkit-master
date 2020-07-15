@@ -1,3 +1,7 @@
+基于 https://github.com/mailhu/emailkit 上修改
+因为没有对hotmail和gmail的支持，增加这两个
+
+
 # EmailKit for Android
 [![](https://img.shields.io/badge/platform-Android-green.svg)](https://developer.android.google.cn/)
 [![](https://jitpack.io/v/mailhu/email.svg)](https://jitpack.io/#mailhu/email)
