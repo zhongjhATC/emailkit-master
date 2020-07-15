@@ -40,7 +40,8 @@ public final class EmailKit {
 
     /**
      * EmailKit框架初始化，该方法应该在自定义的Application中调用。
-     * @param context   上下文
+     *
+     * @param context 上下文
      */
     public static void initialize(Context context) {
         ObjectManager.setContext(context);
@@ -49,6 +50,7 @@ public final class EmailKit {
 
     /**
      * EmailKit框架初始化，该方法应该在自定义的Application中调用。
+     *
      * @param context   上下文
      * @param directory 保持附件的目录路径
      */
@@ -74,8 +76,9 @@ public final class EmailKit {
 
     /**
      * 获取SMTP服务
-     * @param config    EmailKit.Config对象
-     * @return  SMTPService类的对象
+     *
+     * @param config EmailKit.Config对象
+     * @return SMTPService类的对象
      */
     public static SMTPService useSMTPService(Config config) {
         return new SMTPService(config);
@@ -83,8 +86,9 @@ public final class EmailKit {
 
     /**
      * 获取IMAP服务
-     * @param config    EmailKit.Config对象
-     * @return  IMAPService类的对象
+     *
+     * @param config EmailKit.Config对象
+     * @return IMAPService类的对象
      */
     public static IMAPService useIMAPService(Config config) {
         return new IMAPService(config);
@@ -93,8 +97,9 @@ public final class EmailKit {
     /**
      * 当已配置完服务器参数时，可通过该方法来验证配置的邮件服务器参数
      * 和邮箱账号密码是否正确
+     *
      * @param config
-     * @return  配置参数全部正确返回值为true，否则为false
+     * @return 配置参数全部正确返回值为true，否则为false
      */
     public static void auth(EmailKit.Config config, GetAuthCallback getAuthCallback) {
         ObjectManager.getMultiThreadService()
@@ -116,6 +121,7 @@ public final class EmailKit {
      */
     public interface GetSendCallback {
         void onSuccess();
+
         void onFailure(String errMsg);
     }
 
@@ -124,7 +130,9 @@ public final class EmailKit {
      */
     public interface GetReceiveCallback {
         void receiving(Message msg, int index, int total);
+
         void onFinish(List<Message> msgList);
+
         void onFailure(String errMsg);
     }
 
@@ -133,6 +141,7 @@ public final class EmailKit {
      */
     public interface GetLoadCallback {
         void onSuccess(List<Message> msgList);
+
         void onFailure(String errMsg);
     }
 
@@ -141,6 +150,7 @@ public final class EmailKit {
      */
     public interface GetSyncCallback {
         void onSuccess(List<Message> newMsgList, long[] deletedUID);
+
         void onFailure(String errMsg);
     }
 
@@ -149,6 +159,7 @@ public final class EmailKit {
      */
     public interface GetMsgCallback {
         void onSuccess(Message msg);
+
         void onFailure(String errMsg);
     }
 
@@ -157,6 +168,7 @@ public final class EmailKit {
      */
     public interface GetMsgListCallback {
         void onSuccess(List<Message> msgList);
+
         void onFailure(String errMsg);
     }
 
@@ -165,6 +177,7 @@ public final class EmailKit {
      */
     public interface GetCountCallback {
         void onSuccess(int total, int unread);
+
         void onFailure(String errMsg);
     }
 
@@ -173,6 +186,7 @@ public final class EmailKit {
      */
     public interface GetUIDListCallback {
         void onSuccess(long[] uidList);
+
         void onFailure(String errMsg);
     }
 
@@ -181,6 +195,7 @@ public final class EmailKit {
      */
     public interface GetAuthCallback {
         void onSuccess();
+
         void onFailure(String errMsg);
     }
 
@@ -189,6 +204,7 @@ public final class EmailKit {
      */
     public interface GetFolderListCallback {
         void onSuccess(List<String> folderList);
+
         void onFailure(String errMsg);
     }
 
@@ -197,6 +213,7 @@ public final class EmailKit {
      */
     public interface GetOperateCallback {
         void onSuccess();
+
         void onFailure(String errMsg);
     }
 
@@ -205,6 +222,7 @@ public final class EmailKit {
      */
     public interface GetSearchCallback {
         void onSuccess(List<Message> msgList);
+
         void onFailure(String errMsg);
     }
 
@@ -213,6 +231,7 @@ public final class EmailKit {
      */
     public interface OnMsgListener {
         void onMsg(List<Message> msgList);
+
         void onError(String errMsg);
     }
 
@@ -249,14 +268,17 @@ public final class EmailKit {
         private int imapPort;
         private boolean smtpSSL;
         private boolean imapSSL;
+        private String mailType;
 
         /**
          * 快速配置邮件服务器参数，目前主流邮箱有QQ邮箱，Foxmail、
          * 腾讯企业邮（EXMAIL）、Outlook、163和126邮箱
-         * @param type  选择邮箱的类型
+         *
+         * @param type 选择邮箱的类型
          * @return
          */
         public Config setMailType(String type) {
+            mailType = type;
             Config config = Converter.MailTypeUtils.getMailConfiguration(type);
             if (config != null) {
                 this.smtpHost = config.getSMTPHost();
@@ -271,7 +293,8 @@ public final class EmailKit {
 
         /**
          * 设置账号，即是电子邮件的地址
-         * @param account   电子邮件地址
+         *
+         * @param account 电子邮件地址
          * @return
          */
         public Config setAccount(String account) {
@@ -282,7 +305,8 @@ public final class EmailKit {
         /**
          * 设置电子邮件的密码或授权码（授权码需要到邮箱服务提供商
          * 的官网中获取）
-         * @param password  密码或授权码
+         *
+         * @param password 密码或授权码
          * @return
          */
         public Config setPassword(String password) {
@@ -293,9 +317,10 @@ public final class EmailKit {
         /**
          * 设置SMTP服务器的主机地址和端口号，相关host和port可以
          * 到邮箱服务提供商中获取。
-         * @param host  主机地址，例QQ邮箱为：“smtp.qq.com”
-         * @param port  端口号，例QQ邮箱为：465
-         * @param ssl   若端口号支持ssl，则设置为true，否则为false
+         *
+         * @param host 主机地址，例QQ邮箱为：“smtp.qq.com”
+         * @param port 端口号，例QQ邮箱为：465
+         * @param ssl  若端口号支持ssl，则设置为true，否则为false
          * @return
          */
         public Config setSMTP(String host, int port, boolean ssl) {
@@ -308,9 +333,10 @@ public final class EmailKit {
         /**
          * 设置IMAP服务器的主机地址和端口号，相关host和port可以
          * 到邮箱服务提供商中获取。
-         * @param host  主机地址，例QQ邮箱为：“imap.qq.com”
-         * @param port  端口号，例QQ邮箱为：993
-         * @param ssl   若端口号支持ssl，则设置为true，否则为false
+         *
+         * @param host 主机地址，例QQ邮箱为：“imap.qq.com”
+         * @param port 端口号，例QQ邮箱为：993
+         * @param ssl  若端口号支持ssl，则设置为true，否则为false
          * @return
          */
         public Config setIMAP(String host, int port, boolean ssl) {
@@ -350,6 +376,10 @@ public final class EmailKit {
 
         boolean isIMAPSSL() {
             return imapSSL;
+        }
+
+        String getMailType() {
+            return mailType;
         }
     }
 

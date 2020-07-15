@@ -7,8 +7,10 @@ import com.sun.mail.imap.IMAPStore;
 
 import java.util.Properties;
 
+import javax.mail.Authenticator;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 
@@ -16,6 +18,7 @@ class EmailUtils {
 
     /**
      * 获取Session
+     *
      * @param config
      * @return
      */
@@ -42,7 +45,17 @@ class EmailUtils {
                 properties.setProperty("mail.imap.partialfetch", "false");
                 properties.setProperty("mail.imaps.partialfetch", "false");
             }
-            Session session = Session.getInstance(properties);
+            Session session;
+            if (config.getMailType().equals(EmailKit.MailType.OUTLOOK)) {
+                session = Session.getInstance(properties, new Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(config.getAccount(), config.getPassword());
+                    }
+                });
+            } else {
+                session = Session.getInstance(properties);
+            }
             ObjectManager.setSession(session);
             return session;
         } else {
@@ -52,6 +65,7 @@ class EmailUtils {
 
     /**
      * 获取Transport
+     *
      * @param config
      * @return
      * @throws MessagingException
@@ -70,6 +84,7 @@ class EmailUtils {
 
     /**
      * 获取IMAPStore
+     *
      * @param config
      * @return
      * @throws MessagingException
@@ -88,6 +103,7 @@ class EmailUtils {
 
     /**
      * 获取IMAPFolder
+     *
      * @param folderName
      * @param store
      * @param config
