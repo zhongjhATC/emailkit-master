@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value = "MsgDB"/>
+    <version value = "8"/>
+    <list>
+        <mapping class = "com.smailnet.demo.table.LocalMsg"/>
+        <mapping class = "com.smailnet.demo.table.LocalFile"/>
+    </list>
+</litepal>
