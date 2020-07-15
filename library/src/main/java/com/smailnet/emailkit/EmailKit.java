@@ -124,7 +124,7 @@ public final class EmailKit {
         /**
          * @return 自定义文本内容
          */
-        Multipart onSendMessageListener();
+        Multipart onSendMessageListener() throws MessagingException;
     }
 
     /**
