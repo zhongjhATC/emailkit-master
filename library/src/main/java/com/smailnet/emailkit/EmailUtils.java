@@ -23,7 +23,7 @@ class EmailUtils {
      * @return
      */
     static Session getSession(EmailKit.Config config) {
-        if (ObjectManager.getSession() == null) {
+//        if (ObjectManager.getSession() == null) {
             //获取配置参数
             String smtpHost = config.getSMTPHost();
             String imapHost = config.getIMAPHost();
@@ -64,9 +64,9 @@ class EmailUtils {
 //            }
             ObjectManager.setSession(session);
             return session;
-        } else {
-            return ObjectManager.getSession();
-        }
+//        } else {
+//            return ObjectManager.getSession();
+//        }
     }
 
     /**
