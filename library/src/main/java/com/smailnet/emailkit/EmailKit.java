@@ -264,6 +264,7 @@ public final class EmailKit {
         String YEAH = "@yeah.net";
         String $163 = "@163.com";
         String $126 = "@126.com";
+        String GMAIL = "@gmail.com";
     }
 
     /**
