@@ -43,7 +43,7 @@ class EmailUtils {
             }
             properties.put("mail.smtp.connectiontimeout", 10000); // 连接时间限制，单位毫秒。是关于与邮件服务器建立连接的时间长短的。默认是无限制。
             properties.put("mail.smtp.timeout", 10000); // 邮件接收时间限制，单位毫秒。这个是有关邮件接收时间长短。默认是无限制。
-            properties.put("mail.smtp.writetimeout", 8 * 60 * 1000); // 4分钟，邮件发送时间限制，单位毫秒。有关发送邮件时内容上传的时间长短。默认同样是无限制。
+            properties.put("mail.smtp.writetimeout", 8 * 60 * 1000); // 8分钟，邮件发送时间限制，单位毫秒。有关发送邮件时内容上传的时间长短。默认同样是无限制。
         }
         if (!TextUtils.isEmpty(imapHost) && !TextUtils.isEmpty(imapPort)) {
             properties.put("mail.imap.auth", true);
