@@ -44,7 +44,7 @@ class EmailCore {
                 transport.sendMessage(message, message.getRecipients(javax.mail.Message.RecipientType.BCC));
             }
             getSendCallback.onSuccess();
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             getSendCallback.onFailure(e.getMessage());
         }
@@ -74,7 +74,7 @@ class EmailCore {
                 getReceiveCallback.receiving(message, ++index, total);
             }
             getReceiveCallback.onFinish(messageList);
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             getReceiveCallback.onFailure(e.toString());
         }
@@ -102,7 +102,7 @@ class EmailCore {
                 msgList.add(message);
             }
             getLoadCallback.onSuccess(msgList);
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             getLoadCallback.onFailure(e.toString());
         }
@@ -136,7 +136,7 @@ class EmailCore {
                 }
             }
             getSyncCallback.onSuccess(newMsgList, delArray);
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             getSyncCallback.onFailure(e.toString());
         }
@@ -205,7 +205,7 @@ class EmailCore {
             } else {
                 getMsgCallback.onFailure("Message does not exist");
             }
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             getMsgCallback.onFailure(e.getMessage());
         }
@@ -232,7 +232,7 @@ class EmailCore {
                 }
             }
             getMsgListCallback.onSuccess(messageList);
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             getMsgListCallback.onFailure(e.getMessage());
         }
@@ -506,7 +506,7 @@ class EmailCore {
             folder.appendMessages(new MimeMessage[]{message});
             folder.close(true);
             getOperateCallback.onSuccess();
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             getOperateCallback.onFailure(e.getMessage());
         }
@@ -592,7 +592,7 @@ class EmailCore {
                 messageList.add(message);
             }
             getSearchCallback.onSuccess(messageList);
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             getSearchCallback.onFailure(e.getMessage());
         }
@@ -617,7 +617,7 @@ class EmailCore {
                 messageList.add(message);
             }
             getSearchCallback.onSuccess(messageList);
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             getSearchCallback.onFailure(e.getMessage());
         }
@@ -642,7 +642,7 @@ class EmailCore {
                 messageList.add(message);
             }
             getSearchCallback.onSuccess(messageList);
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             getSearchCallback.onFailure(e.getMessage());
         }
