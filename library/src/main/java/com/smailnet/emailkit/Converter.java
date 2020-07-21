@@ -396,7 +396,7 @@ class Converter {
          * @return
          * @throws MessagingException
          */
-        static Message toLocalMessage(long uid, javax.mail.Message message) throws MessagingException {
+        static Message toLocalMessage(long uid, javax.mail.Message message) throws Exception {
             //邮件主题
             String subject = message.getSubject();
             //邮件的发送时间
@@ -451,73 +451,68 @@ class Converter {
          * @param draft
          * @return
          */
-        static MimeMessage toInternetMessage(EmailKit.Config config, Draft draft, EmailKit.SendMessageListener sendMessageListener) {
-            try {
-                Session session = EmailUtils.getSession(config);
-                // 创建消息对象
-                MimeMessage message = new MimeMessage(session);
-                // 收件人
-                message.addRecipients(RecipientType.TO, draft.getTo());
-                // 判断是否存在抄送人
-                if (draft.getCc() != null) {
-                    message.addRecipients(RecipientType.CC, draft.getCc());
-                }
-                // 判断是否存在密送人
-                if (draft.getBcc() != null) {
-                    message.addRecipients(RecipientType.BCC, draft.getBcc());
-                }
-                // 发件人昵称+邮箱地址
-                message.setFrom(new InternetAddress(draft.getNickname() + "<" + config.getAccount() + ">"));
-                // 邮件主题
-                message.setSubject(draft.getSubject(), "UTF-8");
-                // 邮件发送日期
-                message.setSentDate(new Date());
-                // 邮件内容
-                if (sendMessageListener != null) {
-                    // 自己自定义邮件内容
-                    message.setContent(sendMessageListener.onSendMessageListener());
-                } else {
-                    if (draft.getText() != null && draft.getHTML() == null && draft.getAttachment() == null) {
-                        message.setText(draft.getText(), "UTF-8");
-                    } else if (draft.getHTML() != null && draft.getAttachment() == null) {
-                        message.setContent(draft.getHTML(), "text/html; charset=UTF-8");
-                    } else if (draft.getAttachment() != null) {
-                        // 创建多重消息对象
-                        Multipart multipart = new MimeMultipart();
-                        // 文本内容
-                        if (draft.getText() != null) {
-                            MimeBodyPart textBodyPart = new MimeBodyPart();
-                            textBodyPart.setText(draft.getText(), "UTF-8");
-                            multipart.addBodyPart(textBodyPart);
-                        }
-                        // HTML内容
-                        if (draft.getHTML() != null) {
-                            MimeBodyPart htmlBodyPart = new MimeBodyPart();
-                            htmlBodyPart.setContent(draft.getHTML(), "text/html; charset=UTF-8");
-                            multipart.addBodyPart(htmlBodyPart);
-                        }
-                        // 设置图片
-                        // 设置附件
-                        MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-                        File file = draft.getAttachment();
-                        URL url = file.toURI().toURL();
-                        DataSource source = new URLDataSource(url);
-                        attachmentBodyPart.setFileName(TextUtils.encodeText(file.getName()));
-                        attachmentBodyPart.setDataHandler(new DataHandler(source));
-                        multipart.addBodyPart(attachmentBodyPart);
-                        // 设置消息对象
-                        message.setContent(multipart);
-                    }
-                }
-                //保存到已发送文件夹
-                message.setFlag(Flags.Flag.RECENT, true);
-                message.saveChanges();
-                //返回结果
-                return message;
-            } catch (MessagingException | MalformedURLException e) {
-                e.printStackTrace();
-                return null;
+        static MimeMessage toInternetMessage(EmailKit.Config config, Draft draft, EmailKit.SendMessageListener sendMessageListener) throws Exception {
+            Session session = EmailUtils.getSession(config);
+            // 创建消息对象
+            MimeMessage message = new MimeMessage(session);
+            // 收件人
+            message.addRecipients(RecipientType.TO, draft.getTo());
+            // 判断是否存在抄送人
+            if (draft.getCc() != null) {
+                message.addRecipients(RecipientType.CC, draft.getCc());
             }
+            // 判断是否存在密送人
+            if (draft.getBcc() != null) {
+                message.addRecipients(RecipientType.BCC, draft.getBcc());
+            }
+            // 发件人昵称+邮箱地址
+            message.setFrom(new InternetAddress(draft.getNickname() + "<" + config.getAccount() + ">"));
+            // 邮件主题
+            message.setSubject(draft.getSubject(), "UTF-8");
+            // 邮件发送日期
+            message.setSentDate(new Date());
+            // 邮件内容
+            if (sendMessageListener != null) {
+                // 自己自定义邮件内容
+                message.setContent(sendMessageListener.onSendMessageListener());
+            } else {
+                if (draft.getText() != null && draft.getHTML() == null && draft.getAttachment() == null) {
+                    message.setText(draft.getText(), "UTF-8");
+                } else if (draft.getHTML() != null && draft.getAttachment() == null) {
+                    message.setContent(draft.getHTML(), "text/html; charset=UTF-8");
+                } else if (draft.getAttachment() != null) {
+                    // 创建多重消息对象
+                    Multipart multipart = new MimeMultipart();
+                    // 文本内容
+                    if (draft.getText() != null) {
+                        MimeBodyPart textBodyPart = new MimeBodyPart();
+                        textBodyPart.setText(draft.getText(), "UTF-8");
+                        multipart.addBodyPart(textBodyPart);
+                    }
+                    // HTML内容
+                    if (draft.getHTML() != null) {
+                        MimeBodyPart htmlBodyPart = new MimeBodyPart();
+                        htmlBodyPart.setContent(draft.getHTML(), "text/html; charset=UTF-8");
+                        multipart.addBodyPart(htmlBodyPart);
+                    }
+                    // 设置图片
+                    // 设置附件
+                    MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+                    File file = draft.getAttachment();
+                    URL url = file.toURI().toURL();
+                    DataSource source = new URLDataSource(url);
+                    attachmentBodyPart.setFileName(TextUtils.encodeText(file.getName()));
+                    attachmentBodyPart.setDataHandler(new DataHandler(source));
+                    multipart.addBodyPart(attachmentBodyPart);
+                    // 设置消息对象
+                    message.setContent(multipart);
+                }
+            }
+            //保存到已发送文件夹
+            message.setFlag(Flags.Flag.RECENT, true);
+            message.saveChanges();
+            //返回结果
+            return message;
         }
 
     }

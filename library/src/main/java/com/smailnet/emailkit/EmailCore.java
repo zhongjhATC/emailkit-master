@@ -36,7 +36,6 @@ class EmailCore {
         try {
             MimeMessage message = Converter.MessageUtils.toInternetMessage(config, draft, sendMessageListener);
             Transport transport = EmailUtils.getTransport(config);
-            assert message != null;
             transport.sendMessage(message, message.getRecipients(javax.mail.Message.RecipientType.TO));
             if (draft.getCc() != null && draft.getCc().length != 0) {
                 transport.sendMessage(message, message.getRecipients(javax.mail.Message.RecipientType.CC));
