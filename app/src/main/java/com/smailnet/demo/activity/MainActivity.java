@@ -9,6 +9,7 @@ import com.smailnet.demo.BaseActivity;
 import com.smailnet.demo.EmailApplication;
 import com.smailnet.demo.R;
 import com.smailnet.demo.controls.Controls;
+import com.smailnet.emailkit.Draft;
 import com.smailnet.emailkit.EmailKit;
 import com.smailnet.microkv.MicroKV;
 
@@ -24,6 +25,32 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        EmailKit.Config config = new EmailKit.Config();
+//        config.setMailType(EmailKit.MailType.GMAIL);
+//        // 配置发件人邮件服务器参数
+//        config.setAccount("a254191389@gmail.com") // 发件人邮箱
+//                .setPassword("pycguvwemomwjosu"); // 密码或授权码
+//
+//        // 设置一封草稿邮件
+//        Draft draft = new Draft()
+//                .setNickname("Device") // 发件人昵称
+//                .setTo("a254191389@gmail.com") // 收件人邮箱
+//                .setSubject("Device") // 邮件主题
+//                .setText("Device"); //邮件正文
+//
+//        EmailKit.useSMTPService(config)
+//                .send(draft, new EmailKit.GetSendCallback() {
+//                    @Override
+//                    public void onSuccess() {
+//                        // 数据库修改发送成功
+//                    }
+//
+//                    @Override
+//                    public void onFailure(String errMsg) {
+//                    }
+//                }, null);
+
     }
 
     @Override

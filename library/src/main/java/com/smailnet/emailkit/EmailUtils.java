@@ -23,50 +23,44 @@ class EmailUtils {
      * @return
      */
     static Session getSession(EmailKit.Config config) {
-//        if (ObjectManager.getSession() == null) {
-            //获取配置参数
-            String smtpHost = config.getSMTPHost();
-            String imapHost = config.getIMAPHost();
-            String smtpPort = String.valueOf(config.getSMTPPort());
-            String imapPort = String.valueOf(config.getIMAPPort());
-            //配置
-            Properties properties = new Properties();
-            if (!TextUtils.isEmpty(smtpHost) && !TextUtils.isEmpty(smtpPort)) {
-                properties.put("mail.smtp.auth", true);
-                properties.put("mail.smtp.host", smtpHost);
-                properties.put("mail.smtp.port", smtpPort);
-                properties.put("mail.smtp.ssl.enable", config.isSMTPSSL());
+        //获取配置参数
+        String smtpHost = config.getSMTPHost();
+        String imapHost = config.getIMAPHost();
+        String smtpPort = String.valueOf(config.getSMTPPort());
+        String imapPort = String.valueOf(config.getIMAPPort());
+        //配置
+        Properties properties = new Properties();
+        if (!TextUtils.isEmpty(smtpHost) && !TextUtils.isEmpty(smtpPort)) {
+            properties.put("mail.smtp.auth", true);
+            properties.put("mail.smtp.host", smtpHost);
+            properties.put("mail.smtp.port", smtpPort);
+            properties.put("mail.smtp.ssl.enable", config.isSMTPSSL());
+            properties.setProperty("mail.smtp.starttls.enable", "true");
+            if (config.getMailType() != null && config.getMailType().equals(EmailKit.MailType.GMAIL)) {
+                properties.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+                properties.setProperty("mail.smtp.socketFactory.fallback", "false");
+                properties.setProperty("mail.smtp.socketFactory.port", "465");
             }
-            if (!TextUtils.isEmpty(imapHost) && !TextUtils.isEmpty(imapPort)) {
-                properties.put("mail.imap.auth", true);
-                properties.put("mail.imap.host", imapHost);
-                properties.put("mail.imap.port", imapPort);
-                properties.put("mail.imap.ssl.enable", config.isIMAPSSL());
-                properties.setProperty("mail.imap.partialfetch", "false");
-                properties.setProperty("mail.imaps.partialfetch", "false");
+        }
+        if (!TextUtils.isEmpty(imapHost) && !TextUtils.isEmpty(imapPort)) {
+            properties.put("mail.imap.auth", true);
+            properties.put("mail.imap.host", imapHost);
+            properties.put("mail.imap.port", imapPort);
+            properties.put("mail.imap.ssl.enable", config.isIMAPSSL());
+            properties.setProperty("mail.imap.partialfetch", "false");
+            properties.setProperty("mail.imaps.partialfetch", "false");
+        }
+        Session session;
+
+        //用户验证并返回Session，开启用户验证，设置发送邮箱的账号密码。
+        session = Session.getInstance(properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(config.getAccount(), config.getPassword());
             }
-            Session session;
-//            if (config.getMailType() != null && config.getMailType().equals(EmailKit.MailType.OUTLOOK)) {
-                //设置邮件传输服务器，由于本次是发送邮件操作，所需我们需要配置smtp协议，按outlook官方同步邮件的要求，依次配置协议地址，端口号和加密方法
-//                properties.setProperty("mail.smtp.host", "smtp.office365.com");
-//                properties.setProperty("mail.smtp.port", "587");
-                properties.setProperty("mail.smtp.starttls.enable", "true");
-                //用户验证并返回Session，开启用户验证，设置发送邮箱的账号密码。
-//                properties.setProperty("mail.smtp.auth", "true");
-                session = Session.getInstance(properties, new Authenticator() {
-                    @Override
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(config.getAccount(), config.getPassword());
-                    }
-                });
-//            } else {
-//                session = Session.getInstance(properties);
-//            }
-            ObjectManager.setSession(session);
-            return session;
-//        } else {
-//            return ObjectManager.getSession();
-//        }
+        });
+        ObjectManager.setSession(session);
+        return session;
     }
 
     /**
