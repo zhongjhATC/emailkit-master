@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -501,7 +500,11 @@ class Converter {
                     File file = draft.getAttachment();
                     URL url = file.toURI().toURL();
                     DataSource source = new URLDataSource(url);
-                    attachmentBodyPart.setFileName(TextUtils.encodeText(file.getName()));
+//                    if (config.getMailType().equals(EmailKit.MailType.QQ)) {
+                        attachmentBodyPart.setFileName(file.getName());
+//                    } else {
+//                        attachmentBodyPart.setFileName(TextUtils.encodeText(file.getName()));
+//                    }
                     attachmentBodyPart.setDataHandler(new DataHandler(source));
                     multipart.addBodyPart(attachmentBodyPart);
                     // 设置消息对象
